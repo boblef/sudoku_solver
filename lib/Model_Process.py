@@ -1,7 +1,7 @@
 from tensorflow.keras.models import load_model
 
 
-class Model():
+class ModelProcess():
     def __init__(self, model_path):
         """
         Load the CNN model used to capture digits in an image.
