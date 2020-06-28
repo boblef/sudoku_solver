@@ -1,15 +1,16 @@
-from flask import Flask
-from lib.Model import Model
+from flask import Flask, render_template
+from lib.ModelProcess import ModelProcess
 app = Flask(__name__)
 
-model_path = "save_model/digit_model.h5"
-model = Model(model_path)
+model_path = "save_model/keras_digit_model.h5"
+mp = ModelProcess(model_path)
+model = mp.get_model()
 
 
 @app.route('/')
 def hello():
-    name = "Hello"
-    return name
+    name = model.summary()
+    return render_template("index.html", name=name)
 
 
 if __name__ == "__main__":
