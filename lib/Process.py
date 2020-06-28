@@ -337,7 +337,8 @@
 
 import cv2
 face_cascade = cv2.CascadeClassifier(
-    "/Users/koheisuzuki/Desktop/projects/sudoku_solver/xml/haarcascade_frontalface_alt2.xml")
+    "/Users/koheisuzuki/Desktop/projects/"
+    "sudoku_solver/xml/haarcascade_frontalface_alt2.xml")
 ds_factor = 0.6
 
 
