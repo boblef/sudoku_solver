@@ -10,7 +10,7 @@ class TestApp(unittest.TestCase):
 
     def test_status_code(self):
         response = self.app.get('/')
-        self.assertEqual(response.status, 200)
+        self.assertEqual(response.status, '200 OK')
 
 
 if __name__ == "__main__":
