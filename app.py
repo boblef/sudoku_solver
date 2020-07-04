@@ -4,8 +4,7 @@ from lib.ModelProcess import ModelProcess
 
 
 app = Flask(__name__)
-mp = ModelProcess("/Users/koheisuzuki/Desktop/projects/"
-                  "sudoku_solver/save_model/Digit_Recognizer.h5")
+mp = ModelProcess("save_model/Digit_Recognizer.h5")
 model = mp.get_model()
 
 
