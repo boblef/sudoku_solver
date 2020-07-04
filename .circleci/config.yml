@@ -7,7 +7,7 @@ jobs:
     steps:
       - checkout
       - run:
-          command: "python -m unittest --junitxml=test-reports/junit.xml --html=test_reports/pytest_report.html --self-contained-html"
+          command: "python -m unittest"
           name: "Unit Test"
       - store_test_results:
           path: test_reports
