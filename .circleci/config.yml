@@ -7,8 +7,11 @@ jobs:
     steps:
       - checkout
       - run:
-          command: "python -m unittest"
+          name: Install Python Dependencies
+          command: "pip install -r requirements.txt"
+      - run:
           name: "Unit Test"
+          command: "python -m unittest"
       - store_test_results:
           path: test_reports
       - store_artifacts:
