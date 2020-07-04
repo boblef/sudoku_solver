@@ -7,6 +7,9 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Update pip
+          command: "pip install --update pip"
+      - run:
           name: Install Python Dependencies
           command: "pip install -r requirements.txt"
       - run:
