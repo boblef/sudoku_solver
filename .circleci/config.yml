@@ -8,7 +8,7 @@ jobs:
       - checkout
       - run:
           name: Update pip
-          command: "pip install --update pip"
+          command: "pip install --upgrade pip"
       - run:
           name: Install Python Dependencies
           command: "pip install -r requirements.txt"
