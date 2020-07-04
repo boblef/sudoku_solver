@@ -1,4 +1,6 @@
 ---
+orbs:
+  python: circleci/python@0.2.1
 jobs:
   run_test:
     executor: python/default
@@ -13,6 +15,6 @@ jobs:
           path: test_reports
 version: 2.1
 workflows:
-  build_test:
+  main:
     jobs:
       - run_test
