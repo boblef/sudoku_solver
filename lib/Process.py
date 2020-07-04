@@ -5,7 +5,9 @@ import numpy as np
 class VideoCamera():
     def __init__(self, model):
         """
-        Resource: https://github.com/behl1anmol/VideoStreamingFlask
+        Resource: 
+        https://github.com/behl1anmol/VideoStreamingFlask
+        https://github.com/prishitakadam/Real-Time-Sudoku-Solver/blob/master/Real-Time-Sudoku-Solver.ipynb
         """
         self.model = model
         self.video = cv2.VideoCapture(0)
