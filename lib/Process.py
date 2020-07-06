@@ -3,13 +3,14 @@ import numpy as np
 
 
 class VideoCamera():
-    def __init__(self, model):
+    def __init__(self, model, sudoku):
         """
         Resource: 
         https://github.com/behl1anmol/VideoStreamingFlask
         https://github.com/prishitakadam/Real-Time-Sudoku-Solver/blob/master/Real-Time-Sudoku-Solver.ipynb
         """
         self.model = model
+        self.sudoku = sudoku
         self.video = cv2.VideoCapture(0)
 
     def __del__(self):
@@ -318,8 +319,9 @@ class VideoCamera():
         # try to solve the sudoku using the Sudoku class
         try:
             reshaped = np.array(numbers).reshape(9, 9)
+            self.sudoku.set_grid(reshaped)
             print(reshaped)
-
+            # self.sudoku.solve(reshaped)
             ######
             # Solve sudoku
             ######
