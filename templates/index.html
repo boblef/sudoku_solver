@@ -2,4 +2,41 @@
 {% block content %}
 <h1 align="center">Video Streaming Demonistration</h1>
 <img id="bg" class="center" src="{{ url_for('video_feed') }}">
+
+
+<form action="/" method="POST" enctype="multipart/form-data">
+    <input type="submit" value="Display Captured Sudoku Puzzle">
+</form>
+<form action="/solve" method="POST" enctype="multipart/form-data">
+    <table border="1" style="border-collapse: collapse">
+        <tr>
+            <th></th>
+            <th>1</th>
+            <th>2</th>
+            <th>3</th>
+            <th>4</th>
+            <th>5</th>
+            <th>6</th>
+            <th>7</th>
+            <th>8</th>
+            <th>9</th>
+        </tr>
+        {% for item in grid %}
+        <tr>
+            <th>{{loop.index}}</th>
+            {% for digit in item %}
+            <th><input type="text" name="name" size="5" value="{{digit}}"></th>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+    <input type="submit" value="solve">
+</form>
+{% for item in solution %}
+{{loop.index}}
+{% for digit in item %}
+{{digit}}
+{% endfor %}
+<br>
+{% endfor %}
 {% endblock %}
