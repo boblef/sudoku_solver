@@ -10,29 +10,14 @@ class Sudoku():
         self.size = n
         self.grid = np.zeros((self.size, self.size), dtype=int)
 
+    def reset(self):
+        self.grid = np.zeros((self.size, self.size), dtype=int)
+
     def get_label(self, row, col, digit):
         """Returns a string of the cell coordinates and the cell value in a
         standard format.
         """
         return "{row},{col}_{digit}".format(**locals())
-
-    def get_matrix(self, filename):
-        """Return a list of lists containing the content of the input text file.
-        Note: each line of the text file corresponds to a list. Each item in
-        the list is from splitting the line of text by the whitespace ' '.
-        """
-        with open(filename, "r") as f:
-            content = f.readlines()
-
-        lines = []
-        for line in content:
-            new_line = line.rstrip()    # Strip any whitespace after last value
-
-            if new_line:
-                new_line = list(map(int, new_line.split(' ')))
-                lines.append(new_line)
-
-        return lines
 
     def is_correct(self, matrix):
         """Verify that the matrix satisfies the Sudoku constraints.
