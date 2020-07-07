@@ -54,12 +54,9 @@ def solve():
 def video_feed():
     def gen(camera):
         while True:
-            frame, grid = camera.sudoku_cv()
-            if grid is not None:
-                pass
-            else:
-                yield (b'--frame\r\n'
-                       b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
+            frame = camera.sudoku_cv()
+            yield (b'--frame\r\n'
+                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
     return Response(gen(VideoCamera(model, sudoku)),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
