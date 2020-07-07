@@ -8,12 +8,24 @@ app = Flask(__name__)
 mp = ModelProcess("save_model/Digit_Recognizer.h5")
 model = mp.get_model()
 sudoku = Sudoku(N)
+# N by N list
+default_solution = [[0 for _ in range(N)] for _ in range(N)]
+status = "Show a puzzle to the webcam."
 
 
 @app.route('/', methods=["GET", "POST"])
 def index():
-    grid = sudoku.get_grid()
-    return render_template('index.html', grid=grid)
+    if request.method == "POST":
+        grid = sudoku.get_grid()
+        solution = default_solution
+        return render_template('index.html', grid=grid,
+                               solution=solution, status=status)
+    else:
+        sudoku.reset()
+        grid = sudoku.get_grid()
+        solution = default_solution
+        return render_template('index.html', grid=grid,
+                               solution=solution, status=status)
 
 
 @app.route('/solve', methods=["GET", "POST"])
@@ -24,13 +36,15 @@ def solve():
         fixed_grid = sudoku.create_grid_from_list(fixed_nums_flatten)
         status, solution = sudoku.solve(fixed_grid)
         if status:
+            status = "Found a solution."
             return render_template('index.html',
                                    grid=fixed_grid,
-                                   solution=solution)
+                                   solution=solution, status=status)
         else:
+            status = "Could not find a solution, try another one."
             return render_template('index.html',
                                    grid=fixed_grid,
-                                   solution=fixed_grid)
+                                   solution=fixed_grid, status=status)
     else:  # ERROR: nerve called without clicking solve button
         grid = sudoku.get_grid()
         return render_template('index.html', grid=grid)
