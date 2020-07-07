@@ -22,10 +22,9 @@ class Sudoku():
     def is_correct(self, matrix):
         """Verify that the matrix satisfies the Sudoku constraints.
         Args:
-        matrix(list of lists): list contains 'n' lists, where each of the 'n'
-            lists contains 'n' digits. 
+        matrix(2D-numpy): represents 9 by 9 sudoku grid.
         """
-        n = len(matrix)        # Number of rows/columns
+        n = matrix.shape[0]  # Number of rows/columns
         m = int(math.sqrt(n))  # Number of subsquare rows/columns
         unique_digits = set(range(1, n+1))  # Digits in a solution
 
@@ -58,11 +57,11 @@ class Sudoku():
         """Solve Sudoku puzzle given
         args
         ----
-        matrix: 2D list
+        matrix: 2D-numpy
         """
         print("Solving the puzzle")
         # Set up
-        n = len(matrix)          # Number of rows/columns in sudoku
+        n = matrix.shape[0]         # Number of rows/columns in sudoku
         m = int(math.sqrt(n))    # Number of rows/columns in sudoku subsquare
         digits = range(1, n+1)
         bqm = dimod.BinaryQuadraticModel({}, {}, 0.0, dimod.SPIN)
@@ -160,6 +159,7 @@ class Sudoku():
         return self.grid
 
     def create_grid_from_list(self, nums):
-        self.grid = [nums[i:i+self.size]
-                     for i in range(0, self.size*self.size, self.size)]
+        # self.grid = [nums[i:i+self.size]
+        #              for i in range(0, self.size*self.size, self.size)]
+        self.grid = np.array(nums).reshape(self.size, self.size)
         return self.grid
