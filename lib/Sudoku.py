@@ -73,12 +73,11 @@ class Sudoku():
         """Solve Sudoku puzzle given
         args
         ----
-        matrix: 2D Numpy array
+        matrix: 2D list
         """
         print("Solving the puzzle")
         # Set up
-        # n = len(matrix)          # Number of rows/columns in sudoku
-        n = matrix.shape[0]
+        n = len(matrix)          # Number of rows/columns in sudoku
         m = int(math.sqrt(n))    # Number of rows/columns in sudoku subsquare
         digits = range(1, n+1)
         bqm = dimod.BinaryQuadraticModel({}, {}, 0.0, dimod.SPIN)
@@ -176,5 +175,6 @@ class Sudoku():
         return self.grid
 
     def create_grid_from_list(self, nums):
-        self.grid = np.array(nums).reshape(self.size, self.size)
+        self.grid = [nums[i:i+self.size]
+                     for i in range(0, self.size*self.size, self.size)]
         return self.grid
