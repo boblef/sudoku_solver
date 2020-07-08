@@ -10,7 +10,7 @@ model = mp.get_model()
 sudoku = Sudoku(N)
 # N by N list
 default_solution = [[0 for _ in range(N)] for _ in range(N)]
-status = "Show a puzzle to the webcam."
+status = "Please show a puzzle to the webcam."
 
 
 @app.route('/', methods=["GET", "POST"])
@@ -36,12 +36,12 @@ def solve():
         fixed_grid = sudoku.create_grid_from_list(fixed_nums_flatten)
         status, solution = sudoku.solve(fixed_grid)
         if status:
-            status = "Found a solution."
+            status = "Found a solution being displayed down below."
             return render_template('index.html',
                                    grid=fixed_grid,
                                    solution=solution, status=status)
         else:
-            status = "Could not find a solution, try another one."
+            status = "Could not find a solution, please try another one."
             return render_template('index.html',
                                    grid=fixed_grid,
                                    solution=fixed_grid, status=status)
