@@ -3,13 +3,16 @@ from lib.Process import VideoCamera
 from lib.ModelProcess import ModelProcess
 from lib.Sudoku import Sudoku
 
+# Define const
 N = 9
+
+# Define objs
 app = Flask(__name__)
 mp = ModelProcess("save_model/Digit_Recognizer.h5")
 model = mp.get_model()
 sudoku = Sudoku(N)
-# N by N list
-default_solution = [[0 for _ in range(N)] for _ in range(N)]
+
+default_solution = [[0 for _ in range(N)] for _ in range(N)]  # N by N list
 status = "Please show a puzzle to the webcam."
 
 
