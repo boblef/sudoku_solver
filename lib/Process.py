@@ -323,6 +323,6 @@ class VideoCamera():
             reshaped = np.array(numbers).reshape(9, 9)
             self.sudoku.set_grid(reshaped)
             print(reshaped)
-        except:
+        except ValueError as v:
             # Unable to reshape
-            print("Unable to reshape")
+            print(v)
