@@ -1,15 +1,18 @@
 import cv2
 import numpy as np
+from functools import cmp_to_key
 
 
 class VideoCamera():
-    def __init__(self, model):
+    def __init__(self, model, sudoku):
         """
-        Resource: 
+        Resource:
         https://github.com/behl1anmol/VideoStreamingFlask
         https://github.com/prishitakadam/Real-Time-Sudoku-Solver/blob/master/Real-Time-Sudoku-Solver.ipynb
+        https://github.com/tfeldmann/Sudoku
         """
         self.model = model
+        self.sudoku = sudoku
         self.video = cv2.VideoCapture(0)
 
     def __del__(self):
@@ -97,7 +100,6 @@ class VideoCamera():
                 # the blurred picture is already thresholded so this step shows
                 # only the black areas in the sudoku
                 separated = cv2.bitwise_or(mask_inv, blurred)
-
                 # create a perspective transformation matrix.
                 # "square" defines the target dimensions (450x450).
                 # The image we warp "separated" in
@@ -112,7 +114,6 @@ class VideoCamera():
 
                 m = cv2.getPerspectiveTransform(approx, square)
                 transformed = cv2.warpPerspective(separated, m, (550, 550))
-
                 #
                 # 4. get crossing points to determine grid buckling
                 #
@@ -135,7 +136,7 @@ class VideoCamera():
                 contours, _ = cv2.findContours(image=threshed_x,
                                                mode=cv2.RETR_LIST,
                                                method=cv2.CHAIN_APPROX_SIMPLE)
-                from functools import cmp_to_key
+
                 # sort contours by height
                 sorted_contours = sorted(
                     contours, key=cmp_to_key(self.cmp_height))
@@ -206,21 +207,23 @@ class VideoCamera():
                     #
                     # 6. Solve the sudoku
                     #
-                    sudoku_grid = self.solve_sudoku_ocr(
+                    self.solve_sudoku_ocr(
                         transformed, sorted_cross_points)
-                    ret, jpeg = cv2.imencode('.jpg', grid)
-                    return jpeg.tobytes(), sudoku_grid
+                    cv2.drawContours(
+                        frame, [sudoku_contour], 0, (0, 255, 0), 4)
+                    ret, jpeg = cv2.imencode('.jpg', frame)
+                    return jpeg.tobytes()
                 else:
                     ret, jpeg = cv2.imencode('.jpg', frame)
-                    return jpeg.tobytes(), None
+                    return jpeg.tobytes()
             else:
                 # cv2.drawContours(frame, [sudoku_contour], 0, 255)
                 ret, jpeg = cv2.imencode('.jpg', frame)
-                return jpeg.tobytes(), None
+                return jpeg.tobytes()
         else:
             # cv2.drawContours(frame, [sudoku_contour], 0, 255)
             ret, jpeg = cv2.imencode('.jpg', frame)
-            return jpeg.tobytes(), None
+            return jpeg.tobytes()
 
     def sort_grid_points(self, points):
         """
@@ -315,15 +318,11 @@ class VideoCamera():
                 if not number == 0:
                     self.draw_str(src, 75 + x * 50, 75 + y * 50, str(number))
 
-        # try to solve the sudoku using the Sudoku class
+        # Reshape
         try:
             reshaped = np.array(numbers).reshape(9, 9)
+            self.sudoku.set_grid(reshaped)
             print(reshaped)
-
-            ######
-            # Solve sudoku
-            ######
-        except:
-            # no solutions found
-            pass
-        return reshaped
+        except ValueError as v:
+            # Unable to reshape
+            print(v)

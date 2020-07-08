@@ -1,31 +1,66 @@
-from flask import Flask, render_template, Response
+from flask import Flask, render_template, Response, request
 from lib.Process import VideoCamera
 from lib.ModelProcess import ModelProcess
+from lib.Sudoku import Sudoku
 
+# Define const
+N = 9
 
+# Define objs
 app = Flask(__name__)
 mp = ModelProcess("save_model/Digit_Recognizer.h5")
 model = mp.get_model()
+sudoku = Sudoku(N)
+
+default_solution = [[0 for _ in range(N)] for _ in range(N)]  # N by N list
+status = "Please show a puzzle to the webcam."
 
 
-@app.route('/')
+@app.route('/', methods=["GET", "POST"])
 def index():
-    return render_template('index.html')
+    if request.method == "POST":
+        grid = sudoku.get_grid()
+        solution = default_solution
+        return render_template('index.html', grid=grid,
+                               solution=solution, status=status)
+    else:
+        sudoku.reset()
+        grid = sudoku.get_grid()
+        solution = default_solution
+        return render_template('index.html', grid=grid,
+                               solution=solution, status=status)
 
 
-def gen(camera):
-    while True:
-        frame, return_grid = camera.sudoku_cv()
-        if return_grid is not None:
-            yield ""
+@app.route('/solve', methods=["GET", "POST"])
+def solve():
+    if request.method == "POST":
+        fixed_nums_flatten = \
+            [int(digit) for digit in request.form.getlist("name")]
+        fixed_grid = sudoku.create_grid_from_list(fixed_nums_flatten)
+        status, solution = sudoku.solve(fixed_grid)
+        if status:
+            status = "Found a solution being displayed down below."
+            return render_template('index.html',
+                                   grid=fixed_grid,
+                                   solution=solution, status=status)
         else:
-            yield (b'--frame\r\n'
-                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
+            status = "Could not find a solution, please try another one."
+            return render_template('index.html',
+                                   grid=fixed_grid,
+                                   solution=fixed_grid, status=status)
+    else:  # ERROR: nerve called without clicking solve button
+        grid = sudoku.get_grid()
+        return render_template('index.html', grid=grid)
 
 
 @app.route('/video_feed')
 def video_feed():
-    return Response(gen(VideoCamera(model)),
+    def gen(camera):
+        while True:
+            frame = camera.sudoku_cv()
+            yield (b'--frame\r\n'
+                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
+    return Response(gen(VideoCamera(model, sudoku)),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
 

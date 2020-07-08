@@ -1,5 +1,159 @@
 {% extends "layout.html" %}
 {% block content %}
-<h1 align="center">Video Streaming Demonistration</h1>
-<img id="bg" class="center" src="{{ url_for('video_feed') }}">
+<div id="loading"><img id="loading_img" class="center mr-" src="{{ url_for('static', filename='images/loading.gif') }}"
+        style="width: 100px; height: 100px;">
+    <div class="loading_info">Finding the solution...<br>It is usually done within a minute.</div>
+</div>
+<div class="container-fluid" id="content">
+    <div class="row">
+        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+            <div class="sidebar-sticky">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <br>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/">
+                            <span data-feather="home"></span>
+                            TOP <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://github.com/boblef/sudoku_solver" target="_blank">
+                            Code on Github
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://www.linkedin.com/in/koheisuzuki" target="_blank">
+                            LinkedIn
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://boblef.github.io/" target="_blank">
+                            MySite
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://boblef.github.io/docs/koheisuzuki_resume2020_ML.pdf"
+                            target="_blank">
+                            Resume
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+            <div
+                class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 align="center">Video Streaming Demonistration</h1>
+                <div class="btn-toolbar mb-1 mb-md-0">
+                    <div class="btn-group mr-1">
+                        <button type="button" class="btn btn-sm btn-outline-secondary"><a href="/">Refresh</a></button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-2 mb-md-0">
+                <div class="mr-2">
+                    <h5>Status: <strong style="color: #0384fc;">{{status}}</strong></h5>
+
+                    <img id="bg" class="center mr-" src="{{ url_for('video_feed') }}">
+                    <br>
+                    <div>
+                        <h5>Introduction</h5>
+                        <ul>
+                            <li>Grab a sudoku puzzle and showing it to the webcam until you see a green square on the
+                                screen.</li>
+                            <li>Once a green square appeared, Then click the "Display Captured Sudoku Puzzle" button.
+                            </li>
+                            <li>After clicking the button, the captured Sudoku puzzle is displayed in the 9 by 9 table.
+                                Make sure each digit in your original Sudoku puzzle was recognized properly. If not,
+                                please fix them by filling in the corresponding cell.</li>
+                            <li>Once you made sure every number is correct, then click the "Solve" button.</li>
+                            <li>Finally, the solution will be displayed in the "Result" section. If Quantum Computers
+                                failed to solve the puzzle, then try another one.</li>
+                        </ul>
+                        <h5>Note</h5>
+                        <ul>
+                            <li>When video streaming does not start, please refresh the page.</li>
+                            <li>Though we use the D-Wave quantum computers to solve Sudoku puzzles which has a
+                                fascinating speed for the computation, many people access the computers so that we have
+                                to wait for a queue for using them. So the total process will take time but usually, it
+                                is done within a minute.</li>
+                            <li>Sometimes the quantum computers can not find the solution for the given Sudoku puzzle
+                                especially for difficult ones since quantum computers run the calculation several times
+                                and pick up the best solution they found. In other words, it did not converge to an
+                                optimum of the objective function.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div
+                class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h2>Captured Sudoku Puzzle</h2>
+            </div>
+
+            <div class="table-responsive">
+                <form action="/" method="POST" enctype="multipart/form-data">
+                    <input type="submit" value="Display Captured Sudoku Puzzle">
+                </form>
+                <form action="/solve" method="POST" enctype="multipart/form-data">
+                    <table class="table table-striped table-sm" border="1" style="border-collapse: collapse">
+                        <tr>
+                            <th></th>
+                            <th>1</th>
+                            <th>2</th>
+                            <th>3</th>
+                            <th>4</th>
+                            <th>5</th>
+                            <th>6</th>
+                            <th>7</th>
+                            <th>8</th>
+                            <th>9</th>
+                        </tr>
+                        {% for item in grid %}
+                        <tr>
+                            <th>{{loop.index}}</th>
+                            {% for digit in item %}
+                            {% if digit == 0 %}
+                            <th><input type="text" name="name" size="5" value="{{digit}}"></th>
+                            {% else %}
+                            <th><input type="text" name="name" size="5" value="{{digit}}"
+                                    style="background-color: aqua;"></th>
+                            {% endif %}
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </table>
+                    <h5>Please make sure every number is recognized properly, especially for 1s and 7s.</h5>
+                    <input type="submit" value="Solve" onclick="loading();">
+                </form>
+            </div>
+
+            <div
+                class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h2 align="center">Result</h1>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-striped table-sm" border="1" style="border-collapse: collapse">
+                    {% for item in solution %}
+                    <tr>
+                        {% for digit in item %}
+                        <th>{{digit}}</th>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </main>
+    </div>
+</div>
+<script type="text/javascript">//<![CDATA[ 
+    function loading() {
+        $("#loading").show();
+        $("#content").hide();
+    }
+//]]></script>
 {% endblock %}
