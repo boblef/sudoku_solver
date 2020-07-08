@@ -159,7 +159,9 @@ class Sudoku():
         return self.grid
 
     def create_grid_from_list(self, nums):
-        # self.grid = [nums[i:i+self.size]
-        #              for i in range(0, self.size*self.size, self.size)]
-        self.grid = np.array(nums).reshape(self.size, self.size)
-        return self.grid
+        """Convert 1D list which has 81 elements to 2D numpy array"""
+        try:
+            self.grid = np.array(nums).reshape(self.size, self.size)
+            return self.grid
+        except ValueError as v:
+            print(v)
