@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/boblef/sudoku_solver.svg?style=svg)](https://app.circleci.com/pipelines/github/boblef/sudoku_solver)
+
 # Introduction
 
 This is a Flask app in which it detects Sudoku puzzles that we show to the webcam by using OpenCV and a CNN model which is for recognizing each digit. Once it detected a puzzle, then we formulate a Quadratic Binary Model (QBM) and an objective function that we want to minimize in order to find the solution by using D-Wave's quantum computers.
