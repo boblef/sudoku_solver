@@ -11,6 +11,8 @@ The purpose of this project:
 - Learn testing and how to use CI tools such as CircleCI.
 - Learn how to use Docker.
 
+For more information, please visit [mysite](https://boblef.github.io/).
+
 # Setup
 
 1. Create an account for D-Wave Leap since we use D-Wave quantum computers to solve Sudoku puzzles.
