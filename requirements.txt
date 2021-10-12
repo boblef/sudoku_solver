@@ -45,7 +45,7 @@ minorminer==0.1.9
 networkx==2.4
 numpy==1.19.0
 oauthlib==3.1.0
-opencv-contrib-python==4.1.2.30
+opencv-contrib-python==4.2.0.32
 opencv-python==4.1.2.30
 opt-einsum==3.2.1
 ortools==7.7.7810
